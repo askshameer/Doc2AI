@@ -125,7 +125,11 @@ class ParquetExporter(BaseExporter):
                 if isinstance(value, dict):
                     # Flatten nested dictionaries
                     for subkey, subvalue in value.items():
-                        row[f'metadata_{key}_{subkey}'] = subvalue
+                        # Convert complex types to strings for parquet compatibility
+                        if isinstance(subvalue, (dict, list)):
+                            row[f'metadata_{key}_{subkey}'] = str(subvalue)
+                        else:
+                            row[f'metadata_{key}_{subkey}'] = subvalue
                 elif isinstance(value, list):
                     # Convert lists to strings (or handle specially)
                     row[f'metadata_{key}'] = str(value)
@@ -152,7 +156,11 @@ class ParquetExporter(BaseExporter):
             for key, value in entry.metadata.items():
                 if isinstance(value, dict):
                     for subkey, subvalue in value.items():
-                        row[f'metadata_{key}_{subkey}'] = subvalue
+                        # Convert complex types to strings for parquet compatibility
+                        if isinstance(subvalue, (dict, list)):
+                            row[f'metadata_{key}_{subkey}'] = str(subvalue)
+                        else:
+                            row[f'metadata_{key}_{subkey}'] = subvalue
                 elif isinstance(value, list):
                     row[f'metadata_{key}'] = str(value)
                 else:
@@ -178,7 +186,11 @@ class ParquetExporter(BaseExporter):
             if isinstance(value, dict):
                 for subkey, subvalue in value.items():
                     field_name = f'metadata_{key}_{subkey}'
-                    field_type = self._infer_arrow_type(subvalue)
+                    # Convert complex types to strings for schema consistency
+                    if isinstance(subvalue, (dict, list)):
+                        field_type = pa.string()
+                    else:
+                        field_type = self._infer_arrow_type(subvalue)
                     fields.append(pa.field(field_name, field_type))
             else:
                 field_name = f'metadata_{key}'
@@ -203,7 +215,11 @@ class ParquetExporter(BaseExporter):
             if isinstance(value, dict):
                 for subkey, subvalue in value.items():
                     field_name = f'metadata_{key}_{subkey}'
-                    field_type = self._infer_arrow_type(subvalue)
+                    # Convert complex types to strings for schema consistency
+                    if isinstance(subvalue, (dict, list)):
+                        field_type = pa.string()
+                    else:
+                        field_type = self._infer_arrow_type(subvalue)
                     fields.append(pa.field(field_name, field_type))
             else:
                 field_name = f'metadata_{key}'

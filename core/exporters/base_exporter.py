@@ -51,19 +51,25 @@ class BaseExporter(ABC):
             return '.xz'
         return ''
     
-    def _open_file(self, file_path: Path, mode: str = 'w'):
+    def _open_file(self, file_path: Path, mode: str = 'w', **kwargs):
         """Open file with optional compression."""
         if self.compression == 'gzip':
             import gzip
+            # Remove newline parameter for compressed files
+            kwargs.pop('newline', None)
             return gzip.open(file_path, mode + 't', encoding='utf-8')
         elif self.compression == 'bz2':
             import bz2
+            # Remove newline parameter for compressed files
+            kwargs.pop('newline', None)
             return bz2.open(file_path, mode + 't', encoding='utf-8')
         elif self.compression == 'xz':
             import lzma
+            # Remove newline parameter for compressed files
+            kwargs.pop('newline', None)
             return lzma.open(file_path, mode + 't', encoding='utf-8')
         else:
-            return open(file_path, mode, encoding='utf-8')
+            return open(file_path, mode, encoding='utf-8', **kwargs)
     
     def validate_entries(self, entries: List[Union[RAGEntry, FineTuneEntry]]) -> List[str]:
         """Validate entries and return any warnings."""
