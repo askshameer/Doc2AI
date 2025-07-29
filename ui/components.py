@@ -377,7 +377,7 @@ def render_footer():
     st.markdown("""
     <div style="text-align: center; color: #666; padding: 1rem;">
         <p>📄 DocToAI - Document to AI Dataset Converter</p>
-        <p>Created by <strong>Shameer Mohammed</strong> | Built with ❤️ using Streamlit</p>
+        <p>Created by <a href="https://www.shameermohammed.com" target="_blank" style="color: #667eea; text-decoration: none;"><strong>Shameer Mohammed</strong></a> | Built with ❤️ using Streamlit</p>
         <p>
         <a href="https://github.com/askshameer/Doc2AI" target="_blank">GitHub</a> | 
         <a href="https://github.com/askshameer/Doc2AI/tree/main/docs" target="_blank">Documentation</a> |
